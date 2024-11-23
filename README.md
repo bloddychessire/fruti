@@ -62,3 +62,80 @@ public class Main {
         }
     }
 }
+
+
+package mundo;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public class Sistema {
+    private static Sistema instancia; // Singleton
+    private List<String> horariosDisponibles;
+    private List<String> materiasTelecomunicaciones;
+    private List<String> materiasSistemas;
+
+    private Sistema() {
+        // Inicialización de horarios
+        horariosDisponibles = new ArrayList<>();
+        horariosDisponibles.add("Lunes 8-10");
+        horariosDisponibles.add("Lunes 10-12");
+        horariosDisponibles.add("Martes 8-10");
+        horariosDisponibles.add("Martes 10-12");
+        horariosDisponibles.add("Miércoles 8-10");
+        horariosDisponibles.add("Jueves 8-10");
+        horariosDisponibles.add("Viernes 8-10");
+
+        // Inicialización de materias
+        materiasTelecomunicaciones = List.of("Electrónica", "Estructuras de Datos", "Historia de las Culturas", "Ondas y Campos Electromagnéticos");
+        materiasSistemas = List.of("Patrones GRASP", "Ondas y Campos Electromagnéticos", "Matemáticas Especiales TIC", "Matemáticas Aplicadas TIC");
+    }
+
+    public static Sistema getInstancia() {
+        if (instancia == null) {
+            instancia = new Sistema();
+        }
+        return instancia;
+    }
+
+    public List<String> getMaterias(String carrera) {
+        return carrera.equals("Telecomunicaciones") ? materiasTelecomunicaciones : materiasSistemas;
+    }
+
+    public String asignarHorario() {
+        if (horariosDisponibles.isEmpty()) {
+            return "Sin horario disponible";
+        }
+        Random random = new Random();
+        return horariosDisponibles.remove(random.nextInt(horariosDisponibles.size()));
+    }
+}
+
+package controlador;
+
+import mundo.Sistema;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Controlador {
+    private Sistema sistema;
+
+    public Controlador() {
+        sistema = Sistema.getInstancia();
+    }
+
+    public List<String> listarMaterias(String carrera) {
+        return sistema.getMaterias(carrera);
+    }
+
+    public String asignarHorario() {
+        return sistema.asignarHorario();
+    }
+
+    public boolean validarInscripcion(List<String> materiasSeleccionadas) {
+        return !materiasSeleccionadas.isEmpty();
+    }
+}
+
